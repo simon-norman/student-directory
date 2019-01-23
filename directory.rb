@@ -34,22 +34,16 @@ def print_header
 end
 
 def print(students)
-  index = 0
+  students_by_cohort = Hash.new { |hash, key| hash[key] = [] }
   
-  while index < students.length
-    student = students[index]
-    
-    print_aligned("The details for each student are as follows: ")
-    if student[:name].start_with?("A") && student[:name].length < 12
-      student.each do |key, value|
+  students.map { |student| 
+    students_by_cohort[student[:cohort].to_sym].push(student[:name])
+  }
   
-        print_aligned("#{key}: #{value}")
-      end
-    end
-    
-    index += 1
+  students_by_cohort.each do |cohort, student_names|
+    names_as_string = student_names.join(", ")
+    print_aligned("#{cohort}: #{names_as_string}")
   end
-  
 end
 
 def print_footer(students)
