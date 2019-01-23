@@ -12,6 +12,7 @@ end
 def print_menu
     puts "1. Input the students"
     puts "2. Show the students"
+    puts "3. Save the list to students.csv"
     puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -21,6 +22,8 @@ def process(selection)
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
@@ -32,8 +35,9 @@ def input_students
   catch :finish do
     loop do
     
-      new_student = get_blank_student
-      get_blank_student.each do |field, value|
+      new_student = { :name => "", :cohort => "" }
+      
+      new_student.each do |field, value|
         new_student[field] = get_user_input(field)
       end
         
@@ -41,10 +45,6 @@ def input_students
       print_count
     end
   end
-end
-
-def get_blank_student
-  { :name => "", :cohort => "" }
 end
 
 def get_user_input(field)
@@ -64,18 +64,18 @@ def get_user_input(field)
   end
 end
 
-def show_students
-  print_header
-  print_students
-  print_footer
-end
-
 def print_count
   if @students.count == 1
     puts "Now we have #{@students.count} student"
   else
     puts "Now we have #{@students.count} students"
   end
+end
+
+def show_students
+  print_header
+  print_students
+  print_footer
 end
 
 def print_header
@@ -85,6 +85,15 @@ end
 
 def print_aligned(text)
   puts text.center(100)
+end
+
+def print_students
+  students_by_cohort = group_students_by_cohort
+    
+  students_by_cohort.each do |cohort, student_names|
+    names_as_string = student_names.join(", ")
+    print_aligned("#{cohort}: #{names_as_string}")
+  end
 end
 
 def group_students_by_cohort
@@ -97,17 +106,22 @@ def group_students_by_cohort
   return students_by_cohort
 end
 
-def print_students
-  students_by_cohort = group_students_by_cohort
-    
-  students_by_cohort.each do |cohort, student_names|
-    names_as_string = student_names.join(", ")
-    print_aligned("#{cohort}: #{names_as_string}")
-  end
-end
-
 def print_footer
    print_aligned("Overall, we have #{@students.count} great students")
+end
+
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  
+  # iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  
+  file.close
 end
 
 interactive_menu
