@@ -3,23 +3,26 @@ def print_aligned(text)
 end
 
 def input_students 
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
-  
-  # create an empty array
   students = []
-  
-  # get the first name
-  name = gets.chomp
-  
-  # while the name is not empty, repeat this code
-  while !name.empty? do 
-    # add the student hash to the array
-    students << {name: name, cohort: :november}
-    print_aligned("Now we have #{students.count} students")
+  puts "Please enter the name of students and their cohort
+      separated by a comma and space (e.g. 'Tom, November'"
+  puts "To finish, just hit return twice"
     
-    # get another name from the user
-    name = gets.chomp
+  while true do
+  
+    input = gets.chomp
+    if input.empty?
+      break
+    else
+      student = input.split(", ")
+      
+      if student[0] && student[1]
+        students << {name: student[0], cohort: student[1].to_sym}
+        puts "Now we have #{students.count} students"
+      else
+        puts "You have not entered all the required info, please try again."
+      end
+    end
   end
   
   students
