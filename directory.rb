@@ -21,32 +21,24 @@ def input_students
   students
 end
 
-# let's put all the students into an array
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},
-  {name: "Norman Bates", cohort: :november}
-]
-
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
 end
 
 def print(students)
-  students.each_with_index do |student, index|
+  index = 0
+  
+  while index < students.length
+    student = students[index]
+    
     if student[:name].start_with?("A") && student[:name].length < 12
       puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
+    
+    index += 1
   end
+  
 end
 
 def print_footer(students)
