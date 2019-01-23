@@ -7,7 +7,8 @@ def input_students
     
   while true do
   
-    input = gets.chomp
+    input = gets.sub("\n", "")
+
     if input.empty?
       break
     else
