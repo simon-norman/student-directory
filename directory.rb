@@ -32,8 +32,12 @@ def print(students)
   while index < students.length
     student = students[index]
     
+    puts "The details for each student are as follows: "
     if student[:name].start_with?("A") && student[:name].length < 12
-      puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+      student.each do |key, value|
+  
+        puts "#{key}: #{value}"
+      end
     end
     
     index += 1
