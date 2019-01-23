@@ -1,6 +1,3 @@
-def print_aligned(text)
-  puts text.center(100)
-end
 
 def input_students 
   students = []
@@ -18,7 +15,7 @@ def input_students
       
       if student[0] && student[1]
         students << {name: student[0], cohort: student[1].to_sym}
-        puts "Now we have #{students.count} students"
+        print_count(students)
       else
         puts "You have not entered all the required info, please try again."
       end
@@ -28,9 +25,21 @@ def input_students
   students
 end
 
+def print_count(students)
+  if students.count == 1
+    puts "Now we have #{students.count} student"
+  else
+    puts "Now we have #{students.count} students"
+  end
+end
+
 def print_header
   print_aligned("The students of Villains Academy")
   print_aligned("-------------")
+end
+
+def print_aligned(text)
+  puts text.center(100)
 end
 
 def print(students)
