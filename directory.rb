@@ -12,8 +12,8 @@ end
 def print_menu
     puts "1. Input the students"
     puts "2. Show the students"
-    puts "3. Save the list to students.csv"
-    puts "4. Load the list from students.csv"
+    puts "3. Save the list"
+    puts "4. Load the list"
     puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -24,9 +24,9 @@ def process(selection)
     when "2"
       show_students
     when "3"
-      save_students
+      save_students(get_filename)
     when "4"
-      load_students
+      load_students(get_filename)
     when "9"
       exit
     else
@@ -37,20 +37,23 @@ end
 def input_students
   catch :finish do
     loop do
-    
       new_student = { :name => "", :cohort => "" }
       
       new_student.each do |field, value|
-        new_student[field] = get_user_input(field)
+        new_student[field] = get_input_student(field)
       end
         
-      @students << new_student
-      print_count
+      add_student(new_student)
+      print_student_count
     end
   end
 end
 
-def get_user_input(field)
+def add_student(student)
+  @students << student
+end
+
+def get_input_student(field)
   puts "Please enter the #{field} of the student"
   puts "To exit, enter 'exit'"
       
@@ -67,7 +70,7 @@ def get_user_input(field)
   end
 end
 
-def print_count
+def print_student_count
   if @students.count == 1
     puts "Now we have #{@students.count} student"
   else
@@ -113,33 +116,42 @@ def print_footer
    print_aligned("Overall, we have #{@students.count} great students")
 end
 
-def save_students
-  # open the file for writing
-  file = File.open("students.csv", "w")
-  
-  # iterate over the array of students
+def get_filename
+  puts "Please specify the filename"
+  STDIN.gets.chomp
+end
+
+def save_students(filename)
+  File.open(filename, "w") do |file|
+    file = students_to(file)
+  end
+end
+
+def students_to(file)
   @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
+    csv_line = student.values.join(",")
     file.puts csv_line
   end
   
-  file.close
+  return file
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort}
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      add_student({:name => name, :cohort => cohort})
+    end
   end
-  file.close
 end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
-  
+  if filename.nil? 
+    load_students
+    return
+  end
+    
   if File.exists?(filename) # if it exists
     load_students(filename)
      puts "Loaded #{@students.count} from #{filename}"
