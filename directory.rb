@@ -51,16 +51,11 @@ def input_students
   end
 end
 
-def add_student(student)
-  @students << student
-end
-
 def get_input_student(field)
-  puts "Please enter the #{field} of the student"
-  puts "To exit, enter 'exit'"
+  print_input_request(field) 
       
   while true do
-    input = STDIN.gets.sub("\n", "")
+    input = STDIN.gets.chomp
     
     if input == ""
       puts "This is an invalid response, please try again."
@@ -70,6 +65,15 @@ def get_input_student(field)
       return input
     end
   end
+end
+
+def print_input_request(field) 
+  puts "Please enter the #{field} of the student"
+  puts "To return to main menu, enter 'exit'"
+end
+
+def add_student(student)
+  @students << student
 end
 
 def print_student_count
@@ -142,24 +146,29 @@ def load_students(filename = "students.csv")
     name, cohort = student[0], student[1]
     add_student({:name => name, :cohort => cohort})
   end
+  
+  puts "Loaded #{@students.count} from #{filename}"
 end
 
-def try_load_students
-  filename = ARGV.first # first argument from the command line
+def load_students_cmd_args
+  filename = ARGV.first
+  
   if filename.nil? 
     load_students
-    return
-  end
-    
-  if File.exists?(filename) # if it exists
-    load_students(filename)
-     puts "Loaded #{@students.count} from #{filename}"
-  else # if it doesn't exist
-    puts "Sorry, #{filename} doesn't exist."
-    exit # quit the program
+  else
+    try_load_students(filename)
   end
 end
 
-try_load_students
+def try_load_students(filename)
+  if File.exists?(filename)
+    load_students(filename)
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+load_students_cmd_args
 
 interactive_menu
